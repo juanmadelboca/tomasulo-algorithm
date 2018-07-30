@@ -6,15 +6,17 @@ from register import Register
 from threading import Thread
 from time import sleep
 import string
+import os
+from tabulate import tabulate
 
 multiplicationStation = ReserveStation(3,"mult", 6, 'MULT')
 divisionStation = ReserveStation(2,"div", 6, 'DIVD')
 additionStation = ReserveStation(4,"add", 2, 'ADDD')
 loadStation = LoadStation(6,"load", 4)
 storeStation = StoreStation(6,"load", 4)
-registers = Registers(11)
+registers = Registers(10)
 # instructions = ['LD F6, 0(R1)', 'LD F6, 0(R1)', 'MULT F0,F2,F4', 'SUBD F8,F6,F2', 'DIVD F10,F0,F6', 'ADDD F6,F8,F2']
-instructions = ['LD F1,0(F1)', 'MULT F2,F4,F6', 'MULT F5,F7,F3','MULT F8,F2,F5', 'MULT F3,F5,F7', 'DIVD F10,F0,F6', 'ADDD F6,F8,F2', 'ST F2,0(F1)']
+instructions = ['LD F1,0(F1)', 'MULT F2,F4,F6', 'MULT F5,F7,F3','MULT F8,F2,F5', 'MULT F3,F5,F7', 'DIVD F9,F0,F6', 'ADDD F6,F8,F2', 'ST F2,0(F1)']
 pc = 0
 instructionInBus = False
 
@@ -23,17 +25,20 @@ def main():
     instructioneFetcherThread = Thread(target = instructionFetcher)
     global pc
     for i in range(100):
+        raw_input("presione enter para generar un clock")
+        os.system('clear')
         instructionFetcher ()
         CDBThread ()
         pc += 1
 
-    multiplicationStation.printRows()
-    print ""
-    divisionStation.printRows()
-    print ""
-    additionStation.printRows()
-    print ""
-    registers.printRegisters()
+        print "\nMultiplicacion - Estacion de Reserva"
+        multiplicationStation.printRows()
+        print "Division - Estacion de Reserva"
+        divisionStation.printRows()
+        print "Suma - Estacion de Reserva"
+        additionStation.printRows()
+        print "Registros"
+        registers.printRegisters()
 
 def CDBThread ():
     global instructionInBus
@@ -65,8 +70,7 @@ def instructionFetcher ():
         instruction = "NOP"
     else:
         instruction = instructions[pc]
-    print instruction
-    
+    print "INSTRUCCION: ", instruction
     regs = instruction.replace(",", " ").split(" ")
     # multiplication fetch
     if (regs[0] == "MULT"):

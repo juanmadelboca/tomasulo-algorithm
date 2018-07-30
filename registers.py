@@ -29,12 +29,13 @@ class Registers(object):
 
     def printRegisters(self):
         regs = self.iterateRegisters()
-        print tabulate(regs, headers = ['Qi', 'valueI'])
+        print tabulate(regs, headers = ['Registro','Qi', 'valueI'], tablefmt='fancy_grid')
 
     def iterateRegisters(self):
         arr = []
         for i in range(self.size):
             temp = []
+            temp.append("F" + str(i))
             reg = self.registerList[i]
             temp.append(reg.Qi)
             temp.append(reg.valueI)

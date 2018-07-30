@@ -86,7 +86,7 @@ class ReserveStation(object):
 
     def printRows(self):
         arr = self.iterateRows()
-        print tabulate(arr, headers = ['tag', 'opCode', 'Qj', 'valueJ', 'Qk', 'valueK', 'busy'])
+        print tabulate(arr, headers = ['tag', 'Qj', 'valueJ', 'Qk', 'valueK', 'busy', 'R'], tablefmt='fancy_grid')
 
     def iterateRows(self):
         arr = []
@@ -94,11 +94,15 @@ class ReserveStation(object):
             temp = []
             row = self.taskList[i]
             temp.append(row.tag)
-            temp.append(row.opCode)
             temp.append(row.Qj)
             temp.append(row.valueJ)
             temp.append(row.Qk)
             temp.append(row.valueK)
             temp.append(row.busy)
+            if(self.rowNumberFu == i):
+                temp.append(u'\u2713')
+            else:
+                temp.append("")
+
             arr.append(temp)
         return arr
