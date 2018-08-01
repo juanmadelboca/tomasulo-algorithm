@@ -6,8 +6,9 @@ class Registers(object):
     
     def __init__(self, size):
         self.registerList = []
+        self.IntegisterList = []
         self.size = size
-        register = Register("", 2)
+        register = Register("", 0)
         for i in range(size):
             self.registerList.append(register)
     
@@ -15,13 +16,19 @@ class Registers(object):
         return self.registerList[number]
 
     def editRegister(self, register, number):
+        """
+        Cambia el contenido de un registro por otro
+        """
         self.registerList[number] = register
 
     def updateRegisterTag(self,tag, number):
         reg = Register(tag, self.registerList[number].valueI)
         self.editRegister(reg, number)
 
-    def updateRegisterByTag(self, tag, register):
+    def updateRegisterByTag(self, tag, register): 
+        """
+        Cambia el contenido de los registros que contengan el tag por otro
+        """
         for i in range(self.size):
             if(self.registerList[i].Qi == tag):
                 self.editRegister(register, i)
@@ -32,6 +39,9 @@ class Registers(object):
         print tabulate(regs, headers = ['Registro','Qi', 'valueI'], tablefmt='fancy_grid')
 
     def iterateRegisters(self):
+        """
+        Transforma los registros en un arreglo bidimensional, para poder utilizar la libreria tabulate.
+        """
         arr = []
         for i in range(self.size):
             temp = []

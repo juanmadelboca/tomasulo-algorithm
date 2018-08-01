@@ -2,7 +2,6 @@ class Row(object):
     
     def __init__(self, tag):
         self.tag = tag
-        self.opCode = 0
         self.Qj = ""
         self.valueJ = 0
         self.Qk = ""

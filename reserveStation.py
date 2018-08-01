@@ -1,21 +1,21 @@
-from row import Row
+"""
+Clase Estacion de reserva a partir de esta clase se crean multiplicacion, division y suma
+"""
 from tabulate import tabulate
 
 
 class ReserveStation(object):
     
-    def __init__(self, size, tag, opClocks, opCode):
+    def __init__(self, size):
         self.rowNumberFu = -1
-        self.opClocks = opClocks
-        self.opCode = opCode
         self.fuState = 0
         self.taskList = []
         self.size = size
-        for i in range(size):
-            row = Row(tag + str(i))
-            self.taskList.append(row)
 
     def getFreePosition(self):
+        """
+        Si hay lugar en la estacion de reserva devuelve la posicion, de lo contrario devulve -1
+        """
         for i in range(self.size):
             if(not self.taskList[i].isBusy()):
                 self.taskList[i].busy = True
@@ -33,42 +33,22 @@ class ReserveStation(object):
         if(self.rowNumberFu >= 0):
             self.fuState += 1
 
-    def isReady(self):
-        if(self.fuState >= self.opClocks):
-            return True
-        else:
-            return False
-
-    def flushToBus(self):
-        if(self.opCode == 'ADDD'):
-            row = self.taskList[self.rowNumberFu]
-            self.taskList[self.rowNumberFu].busy = False
-            self.rowNumberFu = -1
-            self.fuState = 0
-            return row.tag, row.valueJ + row.valueK
-
-        if(self.opCode == 'DIVD'):
-            row = self.taskList[self.rowNumberFu]
-            self.taskList[self.rowNumberFu].busy = False
-            self.rowNumberFu = -1
-            self.fuState = 0
-            return row.tag, row.valueJ / row.valueK
-
-        if(self.opCode == 'MULT'):
-            row = self.taskList[self.rowNumberFu]
-            self.taskList[self.rowNumberFu].busy = False
-            self.rowNumberFu = -1
-            self.fuState = 0
-            return row.tag, row.valueJ * row.valueK
-
-    def startOperation(self):
+    def startOperation(self):  
+        """
+        Chequea que instruccion dentro de la estacion de reserva tiene todo los valores necesarios
+        para ejecutarse y coloca la operacion en la Unidad funcional
+        """
         if(self.rowNumberFu < 0):
             for i in range(self.size):
                 if(self.taskList[i].isBusy() and self.taskList[i].Qj == "" and self.taskList[i].Qk == ""):
                     self.rowNumberFu = i
                     return
                     
-    def updateValueByTag(self, tag, value):
+    def updateValueByTag(self, tag, value): 
+        """
+        Recorre la estacion de reserva y actualiza los valores que correspondan con la etiqueta de la
+        operacion que a sido terminada.
+        """
         for i in range(self.size):
             if(self.taskList[i].Qj == tag):
                 self.taskList[i].Qj = ""
@@ -77,7 +57,10 @@ class ReserveStation(object):
                 self.taskList[i].Qk = ""
                 self.taskList[i].valueK = value
                     
-    def loadInstruction(self, Qj, valueJ, Qk, valueK, position):
+    def loadInstruction(self, Qj, valueJ, Qk, valueK, position): 
+        """
+        Carga una instruccion con todo lo que necesita en la estacion de reserva (valores y tags).
+        """
         row = self.taskList[position]
         row.Qj = Qj
         row.valueJ = valueJ
@@ -88,7 +71,10 @@ class ReserveStation(object):
         arr = self.iterateRows()
         print tabulate(arr, headers = ['tag', 'Qj', 'valueJ', 'Qk', 'valueK', 'busy', 'R'], tablefmt='fancy_grid')
 
-    def iterateRows(self):
+    def iterateRows(self): 
+        """
+        Transforma la estacion de reserva en un arreglo bidimensional, para poder utilizar la libreria tabulate.
+        """
         arr = []
         for i in range(self.size):
             temp = []
